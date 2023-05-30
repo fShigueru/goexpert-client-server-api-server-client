@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -119,9 +120,9 @@ func Sqlite(realDolarResponse *RealDolarResponse) {
 		CreateDate: usdbrl.CreateDate,
 	})
 
-	// var realDolarBusca []RealDolar
-	// db.Find(&realDolarBusca)
-	// for _, realDolar := range realDolarBusca {
-	// 	fmt.Println(realDolar.Name, realDolar.High, realDolar.Low)
-	// }
+	var realDolarBusca []RealDolar
+	db.Find(&realDolarBusca)
+	for _, realDolar := range realDolarBusca {
+		fmt.Println(realDolar.Name, realDolar.Bid)
+	}
 }

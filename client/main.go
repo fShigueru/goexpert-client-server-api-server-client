@@ -45,5 +45,5 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Erro ao persistir o valor no arquivo: %v\n", err)
 	}
 
-	fmt.Println("Cotação salva com sucesso")
+	fmt.Fprintf(os.Stderr, "Cotação salva com sucesso: Dólar:{%s}\n", dolar.Dolar)
 }
