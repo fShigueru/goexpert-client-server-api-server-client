@@ -56,6 +56,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	realDolar, err := BuscaCambioRealDolar()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Println(err)
 		return
 	}
 
@@ -73,7 +74,7 @@ func BuscaCambioRealDolar() (*RealDolarResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	//em vez de criar um Client, podemos usar um default
+
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return nil, err
