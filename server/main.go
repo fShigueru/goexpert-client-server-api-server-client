@@ -91,17 +91,21 @@ func BuscaCambioRealDolar() (*RealDolarResponse, error) {
 		return nil, err
 	}
 
-	Sqlite(&realDolarResponse)
+	err = Sqlite(&realDolarResponse)
+	if err != nil {
+		return nil, err
+	}
+
 	return &realDolarResponse, nil
 }
 
-func Sqlite(realDolarResponse *RealDolarResponse) {
+func Sqlite(realDolarResponse *RealDolarResponse) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Millisecond)
 	defer cancel()
 
 	db, err := gorm.Open(sqlite.Open("db/realdolar.db"), &gorm.Config{})
 	if err != nil {
-		panic(err)
+		return err
 	}
 	println("Conectando sqlite3")
 	db.AutoMigrate(&RealDolar{})
@@ -124,6 +128,13 @@ func Sqlite(realDolarResponse *RealDolarResponse) {
 	var realDolarBusca []RealDolar
 	db.Find(&realDolarBusca)
 	for _, realDolar := range realDolarBusca {
-		fmt.Println(realDolar.Name, realDolar.Bid)
+		fmt.Println(realDolar.ID, realDolar.Name, realDolar.Bid)
+	}
+
+	select {
+	case <-ctx.Done():
+		return fmt.Errorf("não foi possível registrar a cotação: %v. Time out", realDolarResponse.Usdbrl.Bid)
+	default:
+		return nil
 	}
 }
